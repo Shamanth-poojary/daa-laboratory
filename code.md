@@ -697,3 +697,132 @@ Transitive Closure:
 0 0 0 1
 0 0 0 0
 ```
+
+# Heap Sort Implementation
+
+## 1. Code
+
+```java
+package daa_lab;
+import java.util.*;
+
+public class heap {
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("enter the number of elements in the array");
+		int n =sc.nextInt();
+		System.out.println("enter the array elements");
+		int[] arr = new int[n];
+		for (int i =0;i<n;i++)
+		{
+			arr[i]=sc.nextInt();
+		}
+		long startTime = System.nanoTime();
+		heapsort(arr,n);
+		long endTime = System.nanoTime();
+		System.out.println("Sorted array: " + Arrays.toString(arr));
+		long duration = endTime - startTime;
+		System.out.println("Time taken for sorting: " + duration + " nanoseconds");
+		sc.close();
+	}
+	public static void heapsort(int[] arr,int n)
+	{
+		for(int i =n/2-1;i>=0;i--)
+		{
+			heapify(arr,n,i);
+		}
+		for(int i=n-1;i>0;i--)
+		{
+			int temp =arr[0];
+			arr[0]=arr[i];
+			arr[i]=temp;
+			heapify(arr,i,0);
+		}
+	}
+	public static void heapify(int[] arr,int n,int i)
+	{
+		int largest =i;
+		int left =2*i+1;
+		int right = 2*i+2;
+		if(left<n&&arr[left]>arr[largest])
+		{
+			largest=left;
+		}
+		if(right<n&&arr[right]>arr[largest])
+		{
+			largest=right;
+		}
+		if(largest!=i)
+		{
+			int swap =arr[i];
+			arr[i]=arr[largest];
+			arr[largest]=swap;
+			heapify(arr,n,largest);
+		}
+	}
+
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm HeapSort(arr, n)
+
+    *Phase 1: Build a max heap from the array
+    For i from (n / 2) - 1 down to 0
+        Call Heapify(arr, n, i)
+    End For
+
+    *Phase 2: Extract elements one by one from the heap
+    For i from (n - 1) down to 1
+
+        *Move current root (maximum element) to the end
+        Swap arr[0] with arr[i]
+
+        *Call max heapify on the reduced heap to restore heap property
+        Call Heapify(arr, i, 0)
+
+    End For
+
+END HeapSort
+
+
+Algorithm Heapify(arr, n, i)
+
+    Initialize largest = i     //Assume the root is the largest
+    Calculate leftChild = 2 * i + 1
+    Calculate rightChild = 2 * i + 2
+
+    *If left child exists and is greater than the root
+    If leftChild < n AND arr[leftChild] > arr[largest]
+        Set largest = leftChild
+    End If
+
+    *If right child exists and is greater than the largest so far
+    If rightChild < n AND arr[rightChild] > arr[largest]
+        Set largest = rightChild
+    End If
+
+    *If the largest is not the root, swap and continue heapifying
+    If largest != i
+        Swap arr[i] with arr[largest]
+
+        *Recursively heapify the affected sub-tree
+        Call Heapify(arr, n, largest)
+    End If
+
+END Heapify
+```
+
+## 3. Sample Output
+
+```text
+enter the number of elements in the array
+6
+enter the array elements
+12 11 13 5 6 7
+Sorted array: [5, 6, 7, 11, 12, 13]
+Time taken for sorting: 145200 nanoseconds
+```
