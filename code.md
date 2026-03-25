@@ -4,10 +4,13 @@
 - [Quick Sort Implementation](#quick-sort-implementation)
 - [Binary Search Tree (Insertion and Deletion)](#binary-search-tree-insertion-and-deletion)
 - [Breadth-First Search (BFS) Implementation](#breadth-first-search-bfs-implementation)
+- [Topological Sort (Using DFS)](#topological-sort-using-dfs)
+- [Warshall's Algorithm (Transitive Closure)](#warshalls-algorithm-transitive-closure)
+- [Heap Sort Implementation](#heap-sort-implementation)
 
 ---
 
-## 1. Java Code
+---
 
 # Merge Sort Implementation
 
