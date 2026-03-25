@@ -6,6 +6,7 @@
 - [Breadth-First Search (BFS) Implementation](#breadth-first-search-bfs-implementation)
 
 ---
+
 ## 1. Java Code
 
 # Merge Sort Implementation
@@ -492,4 +493,123 @@ Enter adjacency matrix:
 Enter starting vertex: 0
 BFS Traversal:
 0 1 2 3
+```
+
+# Topological Sort (Using DFS)
+
+## 1. Code
+
+```java
+package daa_lab;
+import java.util.*;
+
+public class topo {
+    int vertices;
+    List<Integer>[] adj;
+
+    topo(int v) {
+        vertices = v;
+        adj = new LinkedList[vertices];
+
+        for (int i = 0; i < vertices; i++) {
+            adj[i] = new LinkedList<>();
+        }
+    }
+
+    void addEdge(int v, int w) {
+        adj[v].add(w);
+    }
+
+    void dfs(int v, boolean[] visited, Stack<Integer> stack) {
+        visited[v] = true;
+
+        for (int n : adj[v]) {
+            if (!visited[n]) {
+                dfs(n, visited, stack);
+            }
+        }
+
+        stack.push(v);
+    }
+
+    void topoSort() {
+        Stack<Integer> stack = new Stack<>();
+        boolean[] visited = new boolean[vertices];
+
+        for (int i = 0; i < vertices; i++) {
+            if (!visited[i]) {
+                dfs(i, visited, stack);
+            }
+        }
+
+
+        System.out.println("Topological Sort:");
+        while (!stack.isEmpty()) {
+            System.out.print(stack.pop() + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of vertices: ");
+        int V = scanner.nextInt();
+
+        topo g = new topo(V);
+
+        System.out.println("Enter the adjacency matrix:");
+        for (int i = 0; i < V; i++) {
+            for (int j = 0; j < V; j++) {
+                if (scanner.nextInt() == 1) {
+                    g.addEdge(i, j);
+                }
+            }
+        }
+
+        g.topoSort();
+        scanner.close();
+    }
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm dfs(v, visited, stack)
+    Mark visited[v] = true
+    For each neighbor 'n' of vertex 'v'
+        If 'n' is not visited
+            dfs(n, visited, stack)
+        End If
+    End For
+    Push vertex 'v' onto the stack
+END dfs
+
+Algorithm topoSort()
+    Create an empty Stack 'stack'
+    Create a boolean array 'visited' of size 'vertices' initialized to false
+
+    For i = 0 to vertices - 1
+        If 'i' is not visited
+            dfs(i, visited, stack)
+        End If
+    End For
+
+    While stack is not empty
+        Pop a vertex from the stack and print it
+    End While
+END topoSort
+```
+
+## 3. Sample Output
+
+```text
+Enter the number of vertices: 4
+Enter the adjacency matrix:
+0 1 1 0
+0 0 0 1
+0 0 0 1
+0 0 0 0
+Topological Sort:
+0 2 1 3
 ```
