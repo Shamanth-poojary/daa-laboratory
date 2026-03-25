@@ -219,3 +219,175 @@ Sorted array:
 5 6 7 11 12 13
 Time taken: 114300 ns
 ```
+
+# Binary Search Tree (Insertion and Deletion)
+
+## 1. Code
+
+```java
+package daa_lab;
+import java.util.*;
+
+class binary_search {
+
+    static class Node {
+        int data;
+        Node left, right;
+
+        Node(int item) {
+            data = item;
+            left = right = null;
+        }
+    }
+
+    Node root;
+
+    Node insert(Node root, int data) {
+        if (root == null) {
+            return new Node(data);
+        }
+        if (data < root.data)
+            root.left = insert(root.left, data);
+        else if (data > root.data)
+            root.right = insert(root.right, data);
+        return root;
+    }
+
+    Node delete(Node root, int data) {
+        if (root == null)
+            return null;
+
+        if (data < root.data)
+            root.left = delete(root.left, data);
+        else if (data > root.data)
+            root.right = delete(root.right, data);
+        else {
+            // Case 1: No child
+            if (root.left == null && root.right == null)
+                return null;
+
+            // Case 2: One child
+            if (root.left == null)
+                return root.right;
+            if (root.right == null)
+                return root.left;
+
+            // Case 3: Two children
+            int min = minval(root.right);
+            root.data = min;
+            root.right = delete(root.right, min);
+        }
+        return root;
+    }
+
+    int minval(Node root) {
+        while (root.left != null)
+            root = root.left;
+        return root.data;
+    }
+
+    void inorder(Node root) {
+        if (root != null) {
+            inorder(root.left);
+            System.out.print(root.data + " ");
+            inorder(root.right);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        binary_search tree = new binary_search();
+
+        System.out.println("Enter number of elements:");
+        int n = sc.nextInt();
+
+        System.out.println("Enter elements:");
+        for (int i = 0; i < n; i++) {
+            int val = sc.nextInt();
+            tree.root = tree.insert(tree.root, val);
+        }
+
+        System.out.println("Inorder traversal:");
+        tree.inorder(tree.root);
+
+        System.out.println("\nEnter number of elements to delete:");
+        int d = sc.nextInt();
+
+        for (int i = 0; i < d; i++) {
+            System.out.println("Enter element to delete:");
+            int del = sc.nextInt();
+            tree.root = tree.delete(tree.root, del);
+
+            System.out.println("Inorder after deletion:");
+            tree.inorder(tree.root);
+            System.out.println();
+        }
+
+        sc.close();
+    }
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm Insert(root, data)
+    If root is NULL
+        Return new Node(data)
+    If data < root.data
+        root.left = Insert(root.left, data)
+    Else If data > root.data
+        root.right = Insert(root.right, data)
+    Return root
+END Insert
+
+Algorithm Delete(root, data)
+    If root is NULL, Return NULL
+
+    If data < root.data
+        root.left = Delete(root.left, data)
+    Else If data > root.data
+        root.right = Delete(root.right, data)
+    Else (Node to be deleted is found)
+        Case 1: No children (leaf node)
+            If root.left is NULL AND root.right is NULL, Return NULL
+        Case 2: One child
+            If root.left is NULL, Return root.right
+            If root.right is NULL, Return root.left
+        Case 3: Two children
+            Find minimum value in the right subtree (minval)
+            Replace root.data with this minimum value
+            root.right = Delete(root.right, minimum value)
+
+    Return root
+END Delete
+
+Algorithm Inorder(root)
+    If root is not NULL
+        Inorder(root.left)
+        Print root.data
+        Inorder(root.right)
+END Inorder
+```
+
+## 3. Sample Output
+
+```text
+Enter number of elements:
+5
+Enter elements:
+50 30 70 20 40
+Inorder traversal:
+20 30 40 50 70
+Enter number of elements to delete:
+2
+Enter element to delete:
+20
+Inorder after deletion:
+30 40 50 70
+
+Enter element to delete:
+30
+Inorder after deletion:
+40 50 70
+```
