@@ -955,3 +955,149 @@ Enter the pattern to search for: World
 Pattern found at index: 6
 total time taken:0.1842nanoseconds
 ```
+
+# 0/1 Knapsack Problem (Dynamic Programming)
+
+## 1. Code
+
+```java
+package daa_lab;
+import java.util.*;
+
+public class knap {
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("enter the number of items ");
+		int n = sc.nextInt();
+		int[] weights =new int[n];
+		int[] values = new int[n];
+		System.out.println("enter the weights ");
+		  for (int i = 0; i < n; i++) {
+	            weights[i] = sc.nextInt();
+	        }
+
+	        System.out.println("Enter the values of the items:");
+	        for (int i = 0; i < n; i++) {
+	            values[i] = sc.nextInt();
+	        }
+	        System.out.print("Enter the knapsack capacity: ");
+	        int capacity = sc.nextInt();
+
+	        System.out.println("Dynamic Programming Matrix:");
+
+	        int maxValue = knapsack(weights, values, capacity);
+
+	        System.out.println("Maximum value: " + maxValue);
+
+	        sc.close();
+	}
+	public static int knapsack(int[] weights,int[] values,int capacity)
+	{
+		int num =weights.length;
+		int[][] dp = new int[num+1][capacity+1];
+		for(int i =0;i<=num;i++)
+		{
+			for(int w =0;w<=capacity;w++)
+			{
+				if(i==0||w==0)
+					dp[i][w]=0;
+				else if(weights[i-1]<=w)
+				{
+					dp[i][w]=Math.max(values[i-1]+dp[i-1][w-weights[i-1]],dp[i-1][w]);
+				}
+				else
+				{
+					dp[i][w]=dp[i-1][w];
+				}
+			}
+		}
+		display(dp);
+		return dp[num][capacity];
+	}
+	public static void display(int[][] dp)
+	{
+		for(int i=0;i<dp.length;i++)
+		{
+			for(int j=0;j<dp[i].length;j++)
+			{
+				System.out.print(dp[i][j]+" ");
+			}
+			System.out.println();
+		}
+	}
+
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm Knapsack(weights, values, capacity)
+
+    Set num = length of weights array
+    Create a 2D array 'dp' of size (num + 1) x (capacity + 1)
+
+    * Build the DP table in a bottom-up manner
+    For i from 0 to num
+        For w from 0 to capacity
+
+            * Base Case: 0 items or 0 capacity means 0 value
+            If i == 0 OR w == 0
+                Set dp[i][w] = 0
+
+            * If the current item's weight is less than or equal to current capacity 'w'
+            Else If weights[i - 1] <= w
+                * Take the maximum of including the item OR excluding the item
+                Set includedValue = values[i - 1] + dp[i - 1][w - weights[i - 1]]
+                Set excludedValue = dp[i - 1][w]
+                Set dp[i][w] = Max(includedValue, excludedValue)
+
+            * If the current item's weight is strictly greater than current capacity 'w'
+            Else
+                * We cannot include this item, carry forward the previous maximum
+                Set dp[i][w] = dp[i - 1][w]
+
+            End If
+
+        End For
+    End For
+
+    * Display the completed DP matrix
+    Call Display(dp)
+
+    * The bottom-right cell contains the maximum value possible
+    Return dp[num][capacity]
+
+END Knapsack
+
+
+Algorithm Display(dp)
+
+    For i from 0 to number of rows in dp
+        For j from 0 to number of columns in dp
+            Print dp[i][j] followed by a space
+        End For
+        Print a newline character
+    End For
+
+END Display
+```
+
+## 3. Sample Output
+
+```text
+enter the number of items
+3
+enter the weights
+1 2 3
+Enter the values of the items:
+10 15 40
+Enter the knapsack capacity: 5
+Dynamic Programming Matrix:
+0 0 0 0 0 0
+0 10 10 10 10 10
+0 10 15 25 25 25
+0 10 15 40 50 55
+Maximum value: 55
+```
