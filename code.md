@@ -1749,3 +1749,142 @@ Enter the value of N: 4
 
 Execution time: 0.8542 ms
 ```
+
+# Subset Sum Problem (Dynamic Programming)
+
+## 1. Code
+
+```java
+package daa_lab;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class SubsetSumDp {
+
+    public static boolean subsetSum(int[] arr, int sum, ArrayList<Integer> subset) {
+        int n = arr.length;
+        boolean[][] dp = new boolean[n + 1][sum + 1];
+
+        for (int i = 0; i <= n; i++) {
+            dp[i][0] = true;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= sum; j++) {
+                if (j >= arr[i - 1]) {
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - arr[i - 1]];
+                } else {
+                    dp[i][j] = dp[i - 1][j];
+                }
+            }
+        }
+
+        if (!dp[n][sum]) {
+            return false;
+        }
+
+        int i = n, j = sum;
+        while (i > 0 && j > 0) {
+            if (dp[i][j] != dp[i - 1][j]) {
+                subset.add(arr[i - 1]);
+                j -= arr[i - 1];
+            }
+            i--;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of elements: ");
+        int n = scanner.nextInt();
+
+        int[] arr = new int[n];
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = scanner.nextInt();
+        }
+
+        System.out.print("Enter the target sum: ");
+        int sum = scanner.nextInt();
+
+        ArrayList<Integer> subset = new ArrayList<>();
+
+        long startTime = System.nanoTime();
+        boolean hasSubsetSum = subsetSum(arr, sum, subset);
+        long endTime = System.nanoTime();
+
+        System.out.println("Subset sum exists: " + hasSubsetSum);
+        if (hasSubsetSum) {
+            System.out.println("Subset contributing to the sum: " + subset);
+        }
+
+        double timeElapsed = (endTime - startTime) / 1e6;
+        System.out.println("Time complexity: " + timeElapsed + " milliseconds");
+
+        scanner.close();
+    }
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm SubsetSum(arr, sum, subset)
+
+    Set n = length of arr
+    Create a 2D boolean array dp[n + 1][sum + 1]
+
+    * A sum of 0 is always possible with an empty subset
+    For i from 0 to n
+        Set dp[i][0] = true
+    End For
+
+    * Build the DP table bottom-up
+    For i from 1 to n
+        For j from 1 to sum
+
+            * If the current element's value is less than or equal to current sum 'j'
+            If j >= arr[i - 1]
+                Set dp[i][j] = dp[i - 1][j] OR dp[i - 1][j - arr[i - 1]]
+            Else
+                Set dp[i][j] = dp[i - 1][j]
+            End If
+
+        End For
+    End For
+
+    * If target sum is not possible, return false
+    If dp[n][sum] == false
+        Return false
+    End If
+
+    * Backtrack through the DP table to find the elements that form the sum
+    Set i = n, j = sum
+    While i > 0 AND j > 0
+        * If the value changed from the row above, this element was included
+        If dp[i][j] != dp[i - 1][j]
+            Add arr[i - 1] to subset
+            Set j = j - arr[i - 1]
+        End If
+        Decrement i
+    End While
+
+    Return true
+
+END SubsetSum
+```
+
+## 3. Sample Output
+
+```text
+Enter the number of elements: 5
+Enter the elements:
+3 34 4 12 5
+Enter the target sum: 9
+Subset sum exists: true
+Subset contributing to the sum: [5, 4]
+Time complexity: 0.1452 milliseconds
+```
