@@ -6,9 +6,6 @@
 - [Breadth-First Search (BFS) Implementation](#breadth-first-search-bfs-implementation)
 
 ---
-
-# Merge Sort Implementation
-
 ## 1. Java Code
 
 # Merge Sort Implementation
