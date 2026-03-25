@@ -1597,3 +1597,155 @@ Shortest paths from source 0 are:
 0 ->3 = 5
 0 ->3 ->4 = 7
 ```
+
+# N-Queens Problem (Backtracking)
+
+## 1. Code
+
+```java
+package daa_lab;
+
+import java.util.Scanner;
+
+public class Nqueens {
+    // Check if it's safe to place a queen at board[row][col]
+    private static boolean isSafe(int[][] board, int row, int col, int N) {
+        // Check this row on left side
+        for (int i = 0; i < col; i++) {
+            if (board[row][i] == 1) return false;
+        }
+
+        // Check upper diagonal on left side
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--) {
+            if (board[i][j] == 1) return false;
+        }
+
+        // Check lower diagonal on left side
+        for (int i = row, j = col; i < N && j >= 0; i++, j--) {
+            if (board[i][j] == 1) return false;
+        }
+
+        return true;
+    }
+
+    private static boolean solveNQueensUtil(int[][] board, int col, int N) {
+        // Base case: All queens are placed
+        if (col >= N) return true;
+
+        for (int i = 0; i < N; i++) {
+            if (isSafe(board, i, col, N)) {
+                board[i][col] = 1; // Place queen
+
+                if (solveNQueensUtil(board, col + 1, N)) return true;
+
+                board[i][col] = 0; // Backtrack
+            }
+        }
+        return false;
+    }
+
+    public static boolean solveNQueens(int N) {
+        int[][] board = new int[N][N];
+        if (!solveNQueensUtil(board, 0, N)) {
+            return false;
+        }
+        displayBoard(board, N);
+        return true;
+    }
+
+    public static void displayBoard(int[][] board, int N) {
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                System.out.print((board[i][j] == 1 ? " 1 " : " 0 "));
+            }
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the value of N: ");
+        if(scanner.hasNextInt()) {
+            int N = scanner.nextInt();
+            long startTime = System.nanoTime();
+
+            if (!solveNQueens(N)) {
+                System.out.println("No solution exists for N = " + N);
+            }
+
+            long endTime = System.nanoTime();
+            double timeElapsed = (endTime - startTime) / 1e6;
+            System.out.println("\nExecution time: " + timeElapsed + " ms");
+        }
+        scanner.close();
+    }
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm IsSafe(board, row, col, N)
+
+    * Check the left side of the current row, upper-left diagonal, and lower-left diagonal
+    If any queen is found in these paths
+        Return False
+    End If
+    Return True
+
+END IsSafe
+
+
+Algorithm SolveNQueensUtil(board, col, N)
+
+    * Base case: If all queens are placed successfully
+    If col >= N
+        Return True
+    End If
+
+    * Try placing a queen in all rows of the current column one by one
+    For i from 0 to N - 1
+        If IsSafe(board, i, col, N) == True
+            Set board[i][col] = 1     * Place the queen
+
+            * Recursively try to place the rest of the queens
+            If SolveNQueensUtil(board, col + 1, N) == True
+                Return True
+            End If
+
+            * If placing queen here doesn't lead to a solution, backtrack
+            Set board[i][col] = 0
+        End If
+    End For
+
+    Return False
+
+END SolveNQueensUtil
+
+
+Algorithm SolveNQueens(N)
+
+    Create an N x N board initialized to 0
+
+    If SolveNQueensUtil(board, 0, N) == False
+        Print "No solution exists"
+        Return False
+    End If
+
+    Print the board configuration
+    Return True
+
+END SolveNQueens
+```
+
+## 3. Sample Output
+
+```text
+Enter the value of N: 4
+ 0  0  1  0
+ 1  0  0  0
+ 0  0  0  1
+ 0  1  0  0
+
+Execution time: 0.8542 ms
+```
