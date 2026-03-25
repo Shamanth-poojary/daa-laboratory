@@ -613,3 +613,87 @@ Enter the adjacency matrix:
 Topological Sort:
 0 2 1 3
 ```
+
+# Warshall's Algorithm (Transitive Closure)
+
+## 1. Code
+
+```java
+package daa_lab;
+import java.util.*;
+
+public class warshalls {
+	public static void main(String[] args)
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("enter the no of vertices");
+		int n =sc.nextInt();
+		int[][] graph =new int[n][n];
+		System.out.println("enter the adjacency matrix");
+		for(int i =0; i<n;i++)
+		{
+			for(int j =0; j<n;j++)
+			{
+				graph[i][j]=sc.nextInt();
+			}
+		}
+		for(int k =0;k<n;k++)
+		{
+			for(int i =0;i<n;i++)
+			{
+				for(int j=0;j<n;j++)
+				{
+					graph[i][j]=graph[i][j]|graph[i][k]&graph[k][j];
+				}
+			}
+		}
+		 System.out.println("Transitive Closure:");
+	        for (int i = 0; i < n; i++) {
+	            for (int j = 0; j < n; j++) {
+	                System.out.print(graph[i][j] + " ");
+	            }
+	            System.out.println();
+	        }
+
+	        sc.close();
+	}
+
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm Warshalls()
+    Read the number of vertices 'n'
+    Create an 'n x n' adjacency matrix 'graph'
+    Read the adjacency matrix elements from the user
+
+    For k = 0 to n - 1
+        For i = 0 to n - 1
+            For j = 0 to n - 1
+                Set graph[i][j] = graph[i][j] OR (graph[i][k] AND graph[k][j])
+            End For
+        End For
+    End For
+
+    Print the updated 'graph' matrix as the Transitive Closure
+END Warshalls
+```
+
+## 3. Sample Output
+
+```text
+enter the no of vertices
+4
+enter the adjacency matrix
+0 1 0 0
+0 0 1 0
+0 0 0 1
+0 0 0 0
+Transitive Closure:
+0 1 1 1
+0 0 1 1
+0 0 0 1
+0 0 0 0
+```
