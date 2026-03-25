@@ -1,3 +1,16 @@
+# 📑 Index
+
+- [Merge Sort Implementation](#merge-sort-implementation)
+- [Quick Sort Implementation](#quick-sort-implementation)
+- [Binary Search Tree (Insertion and Deletion)](#binary-search-tree-insertion-and-deletion)
+- [Breadth-First Search (BFS) Implementation](#breadth-first-search-bfs-implementation)
+
+---
+
+# Merge Sort Implementation
+
+## 1. Java Code
+
 # Merge Sort Implementation
 
 ## 1. Java Code
