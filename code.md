@@ -829,3 +829,129 @@ enter the array elements
 Sorted array: [5, 6, 7, 11, 12, 13]
 Time taken for sorting: 145200 nanoseconds
 ```
+
+# Horspool's String Matching Algorithm
+
+## 1. Code
+
+```java
+package daa_lab;
+import java.util.*;
+
+public class horsepool {
+public static void main(String[] args)
+{
+	Scanner sc = new Scanner(System.in);
+	System.out.print("Enter the text: ");
+	String text = sc.nextLine();
+	System.out.print("Enter the pattern to search for: ");
+	String pattern = sc.nextLine();
+	long startTime = System.nanoTime();
+	int index = search(text, pattern);
+	long endTime = System.nanoTime();
+	if (index != -1)
+	{
+	System.out.println("Pattern found at index: " + index);
+	}
+	else {
+	System.out.println("Pattern not found.");
+	}
+	double timeElapsed = (endTime - startTime) / 1e6;
+	System.out.println("total time taken:"+timeElapsed+"nanoseconds");
+	sc.close();
+}
+public static int search(String text,String pattern)
+{
+	int[] table =shift(pattern);
+	int n = text.length();
+	int m =pattern.length();
+	int i=m-1;
+	while(i<n)
+	{
+		int k =0;
+		while(k<m&&pattern.charAt(m-1-k)==text.charAt(i-k))
+			k++;
+		if(k==m)
+			return i-m+1;
+		i+=table[text.charAt(i)];
+	}
+	return -1;
+}
+public static int[] shift(String pattern)
+{
+	int m =pattern.length();
+	int[] table = new int[256];
+	for(int i =0;i<256;i++)
+		table[i]=m;
+	for(int i=0;i<m-1;i++)
+		table[pattern.charAt(i)]=m-i-1;
+	return table;
+}
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm HorspoolSearch(text, pattern)
+
+    * Pre-compute the shift table based on the pattern
+    Set table = Call ShiftTable(pattern)
+    Set n = length of text
+    Set m = length of pattern
+
+    * Align the right end of the pattern with the text
+    Set i = m - 1
+
+    While i < n
+        Set k = 0
+
+        * Compare pattern from right to left
+        While k < m AND pattern[m - 1 - k] == text[i - k]
+            Increment k
+        End While
+
+        * If the entire pattern matched
+        If k == m
+            Return (i - m + 1)     * Return the starting index of the match
+        End If
+
+        * Shift the pattern based on the bad-character heuristic
+        Set i = i + table[text[i]]
+
+    End While
+
+    Return -1     * Pattern was not found in the text
+
+END HorspoolSearch
+
+
+Algorithm ShiftTable(pattern)
+
+    Set m = length of pattern
+    Create an array 'table' of size 256
+
+    * Initialize all ASCII characters to the maximum shift (pattern length)
+    For i from 0 to 255
+        Set table[i] = m
+    End For
+
+    * Calculate actual shift values based on the characters in the pattern
+    * (excluding the last character of the pattern)
+    For i from 0 to m - 2
+        Set table[pattern[i]] = m - i - 1
+    End For
+
+    Return table
+
+END ShiftTable
+```
+
+## 3. Sample Output
+
+```text
+Enter the text: Hello World from Java
+Enter the pattern to search for: World
+Pattern found at index: 6
+total time taken:0.1842nanoseconds
+```
