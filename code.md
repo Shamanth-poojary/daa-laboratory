@@ -1101,3 +1101,156 @@ Dynamic Programming Matrix:
 0 10 15 40 50 55
 Maximum value: 55
 ```
+
+# Prim's Minimum Spanning Tree Algorithm
+
+## 1. Code
+
+```java
+package daa_lab;
+
+import java.util.Scanner;
+
+public class prims {
+
+    public static void main(String[] args) {
+
+        int[][] w = new int[10][10];
+        int[] sol = new int[10];
+
+        int n, i, j, s, k = 0;
+        int min, sum = 0;
+        int u = 0, v = 0;
+        int flag = 0;
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the number of vertices");
+        n = sc.nextInt();
+
+        for (i = 1; i <= n; i++)
+            sol[i] = 0;
+
+        System.out.println("Enter the weighted graph");
+        for (i = 1; i <= n; i++) {
+            for (j = 1; j <= n; j++) {
+                w[i][j] = sc.nextInt();
+            }
+        }
+
+        System.out.println("Enter the source vertex");
+        s = sc.nextInt();
+
+        sol[s] = 1;
+        k = 1;
+
+        while (k <= n - 1) {
+
+            min = 99;
+            u = 0;
+            v = 0;
+
+            for (i = 1; i <= n; i++) {
+                for (j = 1; j <= n; j++) {
+
+                    if (sol[i] == 1 && sol[j] == 0) {
+                        if (w[i][j] < min) {
+                            min = w[i][j];
+                            u = i;
+                            v = j;
+                        }
+                    }
+                }
+            }
+
+            if (min == 99)
+                break;
+
+            sol[v] = 1;
+            sum = sum + min;
+            k++;
+
+            System.out.println(u + "->" + v + "=" + min);
+        }
+
+        for (i = 1; i <= n; i++) {
+            if (sol[i] == 0)
+                flag = 1;
+        }
+
+        if (flag == 1)
+            System.out.println("No spanning tree");
+        else
+            System.out.println("The cost of minimum spanning tree is " + sum);
+
+        sc.close();
+    }
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm PrimsMST()
+
+    Read the number of vertices 'n', the adjacency matrix 'w', and source vertex 's'
+    Create an array 'sol' and initialize all vertices as unvisited (0)
+
+    * Mark the source vertex as visited
+    Set sol[s] = 1
+    Set sum = 0
+
+    * A minimum spanning tree has exactly (n - 1) edges
+    For k from 1 to n - 1
+        Set min = infinity (represented as 99)
+        Set u = 0, v = 0
+
+        * Find the smallest edge connecting a visited vertex 'i' to an unvisited vertex 'j'
+        For every visited vertex 'i' and every unvisited vertex 'j'
+            If w[i][j] < min
+                Set min = w[i][j]
+                Set u = i
+                Set v = j
+            End If
+        End For
+
+        * If no valid edge is found, the graph is disconnected
+        If min == infinity
+            Break
+        End If
+
+        * Mark the destination vertex as visited and add to total cost
+        Set sol[v] = 1
+        Set sum = sum + min
+
+        Print the added edge (u -> v) and its cost
+
+    End For
+
+    * If any vertex remains unvisited, a full spanning tree isn't possible
+    If any vertex in 'sol' is still 0
+        Print "No spanning tree"
+    Else
+        Print "The cost of minimum spanning tree is " + sum
+    End If
+
+END PrimsMST
+```
+
+## 3. Sample Output
+
+```text
+Enter the number of vertices
+4
+Enter the weighted graph
+99 2 99 6
+2 99 3 8
+99 3 99 5
+6 8 5 99
+Enter the source vertex
+1
+1->2=2
+2->3=3
+3->4=5
+The cost of minimum spanning tree is 10
+```
