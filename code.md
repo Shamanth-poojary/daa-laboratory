@@ -7,8 +7,13 @@
 - [Topological Sort (Using DFS)](#topological-sort-using-dfs)
 - [Warshall's Algorithm (Transitive Closure)](#warshalls-algorithm-transitive-closure)
 - [Heap Sort Implementation](#heap-sort-implementation)
-
----
+- [Horspool's String Matching Algorithm](#horspools-string-matching-algorithm)
+- [0/1 Knapsack Problem (Dynamic Programming)](#01-knapsack-problem-dynamic-programming)
+- [Prim's Minimum Spanning Tree Algorithm](#prims-minimum-spanning-tree-algorithm)
+- [Kruskal's Minimum Spanning Tree Algorithm](#kruskals-minimum-spanning-tree-algorithm)
+- [Dijkstra's Shortest Path Algorithm](#dijkstras-shortest-path-algorithm)
+- [N-Queens Problem (Backtracking)](#n-queens-problem-backtracking)
+- [Subset Sum Problem (Dynamic Programming)](#subset-sum-problem-dynamic-programming)
 
 ---
 
