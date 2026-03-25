@@ -391,3 +391,95 @@ Enter element to delete:
 Inorder after deletion:
 40 50 70
 ```
+
+# Breadth-First Search (BFS) Implementation
+
+## 1. Code
+
+```java
+package daa_lab;
+import java.util.*;
+
+public class bfs {
+public static void breadth(int[][] graph,int start,int vertices)
+{
+	boolean[] visited = new boolean[vertices];
+	Queue<Integer> queue = new LinkedList<>();
+	visited[start]=true;
+	queue.add(start);
+	while(!queue.isEmpty())
+	{
+		int current = queue.poll();
+		System.out.print(current+" ");
+		for(int i =0;i<vertices;i++)
+		{
+			if(graph[current][i]==1&&!visited[i])
+			{
+				visited[i]=true;
+				queue.add(i);
+			}
+		}
+	}
+}
+public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+
+    System.out.print("Enter number of vertices: ");
+    int v = sc.nextInt();
+
+    int[][] graph = new int[v][v];
+
+    System.out.println("Enter adjacency matrix:");
+    for (int i = 0; i < v; i++) {
+        for (int j = 0; j < v; j++) {
+            graph[i][j] = sc.nextInt();
+        }
+    }
+
+    System.out.print("Enter starting vertex: ");
+    int start = sc.nextInt();
+
+    System.out.println("BFS Traversal:");
+    breadth(graph, start, v);
+
+    sc.close();
+}
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm Breadth(graph, start, vertices)
+    Create a boolean array 'visited' of size 'vertices' initialized to false
+    Create an empty queue 'queue'
+
+    Mark visited[start] = true
+    Add 'start' to the queue
+
+    While queue is not empty
+        Remove the front node from the queue and assign it to 'current'
+        Print 'current'
+
+        For i = 0 to vertices - 1
+            If there is an edge from 'current' to 'i' (graph[current][i] == 1) AND 'i' is not visited
+                Mark visited[i] = true
+                Add 'i' to the queue
+        End For
+    End While
+END Breadth
+```
+
+## 3. Sample Output
+
+```text
+Enter number of vertices: 4
+Enter adjacency matrix:
+0 1 1 0
+1 0 0 1
+1 0 0 1
+0 1 1 0
+Enter starting vertex: 0
+BFS Traversal:
+0 1 2 3
+```
