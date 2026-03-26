@@ -1603,6 +1603,209 @@ Shortest paths from source 0 are:
 0 ->3 ->4 = 7
 ```
 
+# Traveling Salesperson Problem (Recursive / Exhaustive Search)
+
+## 1. Code
+
+```java
+package daa_lab;
+
+import java.util.Scanner;
+
+public class TSPExp {
+    int weight[][], n, tour[], finalCost;
+    final int INF = 1000;
+
+    TSPExp() {
+        Scanner s = new Scanner(System.in);
+        System.out.println("Enter no. of nodes:");
+        n = s.nextInt();
+
+        weight = new int[n][n];
+        tour = new int[n - 1];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j) {
+                    System.out.print("Enter weight of " + (i + 1) + " to " + (j + 1) + ": ");
+                    weight[i][j] = s.nextInt();
+                } else {
+                    weight[i][j] = 0;
+                }
+            }
+        }
+
+        System.out.println("Starting node assumed to be node 1");
+        eval();
+        s.close();
+    }
+
+    public int COST(int currentNode, int inputSet[], int setSize) {
+        if (setSize == 0)
+            return weight[currentNode][0];
+
+        int min = INF;
+        int[] nextSet = new int[n];
+
+        for (int i = 0; i < setSize; i++) {
+            int k = 0;
+            for (int j = 0; j < setSize; j++) {
+                if (i != j)
+                    nextSet[k++] = inputSet[j];
+            }
+
+            int temp = COST(inputSet[i], nextSet, setSize - 1);
+            if (weight[currentNode][inputSet[i]] + temp < min)
+                min = weight[currentNode][inputSet[i]] + temp;
+        }
+        return min;
+    }
+
+    public int MIN(int currentNode, int inputSet[], int setSize) {
+        if (setSize == 0)
+            return 0;
+
+        int min = INF, minIndex = 0;
+        int[] nextSet = new int[n];
+
+        for (int i = 0; i < setSize; i++) {
+            int k = 0;
+            for (int j = 0; j < setSize; j++) {
+                if (i != j)
+                    nextSet[k++] = inputSet[j];
+            }
+
+            int temp = COST(inputSet[i], nextSet, setSize - 1);
+            if (weight[currentNode][inputSet[i]] + temp < min) {
+                min = weight[currentNode][inputSet[i]] + temp;
+                minIndex = inputSet[i];
+            }
+        }
+        return minIndex;
+    }
+
+    public void eval() {
+        int[] set = new int[n - 1];
+        for (int i = 1; i < n; i++)
+            set[i - 1] = i;
+
+        finalCost = COST(0, set, n - 1);
+        constructTour();
+    }
+
+    public void constructTour() {
+        int[] prevSet = new int[n];
+        int setSize = n - 1;
+
+        for (int i = 1; i < n; i++)
+            prevSet[i - 1] = i;
+
+        int current = 0;
+        for (int i = 0; i < n - 1; i++) {
+            int nextNode = MIN(current, prevSet, setSize);
+            tour[i] = nextNode;
+
+            int[] nextSet = new int[n];
+            int k = 0;
+            for (int j = 0; j < setSize; j++) {
+                if (prevSet[j] != nextNode) {
+                    nextSet[k++] = prevSet[j];
+                }
+            }
+            prevSet = nextSet;
+            setSize--;
+            current = nextNode;
+        }
+        display();
+    }
+
+    public void display() {
+        System.out.print("The tour is 1-");
+        for (int i = 0; i < n - 1; i++)
+            System.out.print((tour[i] + 1) + "-");
+        System.out.println("1");
+        System.out.println("The final cost is " + finalCost);
+    }
+
+    public static void main(String args[]) {
+        new TSPExp();
+    }
+}
+```
+
+## 2. Algorithm
+
+```text
+Algorithm COST(currentNode, inputSet, setSize)
+
+    * Base case: If no unvisited nodes are left, return cost to go back to start (node 0)
+    If setSize == 0
+        Return weight[currentNode][0]
+    End If
+
+    Set min = Infinity
+
+    * Recursively calculate the cost for all possible next paths
+    For each node 'i' in inputSet
+        Create nextSet by removing node 'i' from inputSet
+
+        Set tempCost = COST(i, nextSet, setSize - 1)
+        Set totalCost = weight[currentNode][i] + tempCost
+
+        * Update the minimum cost found so far
+        If totalCost < min
+            Set min = totalCost
+        End If
+    End For
+
+    Return min
+
+END COST
+
+
+Algorithm ConstructTour()
+
+    Set current = 0
+    Initialize remainingSet with all unvisited nodes
+
+    * Trace the path by finding the node that yielded the minimum cost at each step
+    For step from 0 to n - 2
+        * MIN function works exactly like COST, but returns the best node instead of the cost
+        Set nextNode = MIN(current, remainingSet, setSize)
+
+        Add nextNode to tour
+        Remove nextNode from remainingSet
+        Decrement setSize
+        Set current = nextNode
+    End For
+
+    Print the complete tour and the final cost
+
+END ConstructTour
+```
+
+## 3. Sample Output
+
+```text
+Enter no. of nodes:
+4
+Enter weight of 1 to 2: 10
+Enter weight of 1 to 3: 15
+Enter weight of 1 to 4: 20
+Enter weight of 2 to 1: 10
+Enter weight of 2 to 3: 35
+Enter weight of 2 to 4: 25
+Enter weight of 3 to 1: 15
+Enter weight of 3 to 2: 35
+Enter weight of 3 to 4: 30
+Enter weight of 4 to 1: 20
+Enter weight of 4 to 2: 25
+Enter weight of 4 to 3: 30
+Starting node assumed to be node 1
+The tour is 1-2-4-3-1
+The final cost is 80
+```
+
 # N-Queens Problem (Backtracking)
 
 ## 1. Code
@@ -1892,207 +2095,4 @@ Enter the target sum: 9
 Subset sum exists: true
 Subset contributing to the sum: [5, 4]
 Time complexity: 0.1452 milliseconds
-```
-
-# Traveling Salesperson Problem (Recursive / Exhaustive Search)
-
-## 1. Code
-
-```java
-package daa_lab;
-
-import java.util.Scanner;
-
-public class TSPExp {
-    int weight[][], n, tour[], finalCost;
-    final int INF = 1000;
-
-    TSPExp() {
-        Scanner s = new Scanner(System.in);
-        System.out.println("Enter no. of nodes:");
-        n = s.nextInt();
-
-        weight = new int[n][n];
-        tour = new int[n - 1];
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i != j) {
-                    System.out.print("Enter weight of " + (i + 1) + " to " + (j + 1) + ": ");
-                    weight[i][j] = s.nextInt();
-                } else {
-                    weight[i][j] = 0;
-                }
-            }
-        }
-
-        System.out.println("Starting node assumed to be node 1");
-        eval();
-        s.close();
-    }
-
-    public int COST(int currentNode, int inputSet[], int setSize) {
-        if (setSize == 0)
-            return weight[currentNode][0];
-
-        int min = INF;
-        int[] nextSet = new int[n];
-
-        for (int i = 0; i < setSize; i++) {
-            int k = 0;
-            for (int j = 0; j < setSize; j++) {
-                if (i != j)
-                    nextSet[k++] = inputSet[j];
-            }
-
-            int temp = COST(inputSet[i], nextSet, setSize - 1);
-            if (weight[currentNode][inputSet[i]] + temp < min)
-                min = weight[currentNode][inputSet[i]] + temp;
-        }
-        return min;
-    }
-
-    public int MIN(int currentNode, int inputSet[], int setSize) {
-        if (setSize == 0)
-            return 0;
-
-        int min = INF, minIndex = 0;
-        int[] nextSet = new int[n];
-
-        for (int i = 0; i < setSize; i++) {
-            int k = 0;
-            for (int j = 0; j < setSize; j++) {
-                if (i != j)
-                    nextSet[k++] = inputSet[j];
-            }
-
-            int temp = COST(inputSet[i], nextSet, setSize - 1);
-            if (weight[currentNode][inputSet[i]] + temp < min) {
-                min = weight[currentNode][inputSet[i]] + temp;
-                minIndex = inputSet[i];
-            }
-        }
-        return minIndex;
-    }
-
-    public void eval() {
-        int[] set = new int[n - 1];
-        for (int i = 1; i < n; i++)
-            set[i - 1] = i;
-
-        finalCost = COST(0, set, n - 1);
-        constructTour();
-    }
-
-    public void constructTour() {
-        int[] prevSet = new int[n];
-        int setSize = n - 1;
-
-        for (int i = 1; i < n; i++)
-            prevSet[i - 1] = i;
-
-        int current = 0;
-        for (int i = 0; i < n - 1; i++) {
-            int nextNode = MIN(current, prevSet, setSize);
-            tour[i] = nextNode;
-
-            int[] nextSet = new int[n];
-            int k = 0;
-            for (int j = 0; j < setSize; j++) {
-                if (prevSet[j] != nextNode) {
-                    nextSet[k++] = prevSet[j];
-                }
-            }
-            prevSet = nextSet;
-            setSize--;
-            current = nextNode;
-        }
-        display();
-    }
-
-    public void display() {
-        System.out.print("The tour is 1-");
-        for (int i = 0; i < n - 1; i++)
-            System.out.print((tour[i] + 1) + "-");
-        System.out.println("1");
-        System.out.println("The final cost is " + finalCost);
-    }
-
-    public static void main(String args[]) {
-        new TSPExp();
-    }
-}
-```
-
-## 2. Algorithm
-
-```text
-Algorithm COST(currentNode, inputSet, setSize)
-
-    * Base case: If no unvisited nodes are left, return cost to go back to start (node 0)
-    If setSize == 0
-        Return weight[currentNode][0]
-    End If
-
-    Set min = Infinity
-
-    * Recursively calculate the cost for all possible next paths
-    For each node 'i' in inputSet
-        Create nextSet by removing node 'i' from inputSet
-
-        Set tempCost = COST(i, nextSet, setSize - 1)
-        Set totalCost = weight[currentNode][i] + tempCost
-
-        * Update the minimum cost found so far
-        If totalCost < min
-            Set min = totalCost
-        End If
-    End For
-
-    Return min
-
-END COST
-
-
-Algorithm ConstructTour()
-
-    Set current = 0
-    Initialize remainingSet with all unvisited nodes
-
-    * Trace the path by finding the node that yielded the minimum cost at each step
-    For step from 0 to n - 2
-        * MIN function works exactly like COST, but returns the best node instead of the cost
-        Set nextNode = MIN(current, remainingSet, setSize)
-
-        Add nextNode to tour
-        Remove nextNode from remainingSet
-        Decrement setSize
-        Set current = nextNode
-    End For
-
-    Print the complete tour and the final cost
-
-END ConstructTour
-```
-
-## 3. Sample Output
-
-```text
-Enter no. of nodes:
-4
-Enter weight of 1 to 2: 10
-Enter weight of 1 to 3: 15
-Enter weight of 1 to 4: 20
-Enter weight of 2 to 1: 10
-Enter weight of 2 to 3: 35
-Enter weight of 2 to 4: 25
-Enter weight of 3 to 1: 15
-Enter weight of 3 to 2: 35
-Enter weight of 3 to 4: 30
-Enter weight of 4 to 1: 20
-Enter weight of 4 to 2: 25
-Enter weight of 4 to 3: 30
-Starting node assumed to be node 1
-The tour is 1-2-4-3-1
-The final cost is 80
 ```
